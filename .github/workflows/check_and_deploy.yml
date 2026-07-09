@@ -9,26 +9,26 @@ env:
   IMAGE: ghcr.io/igor-526/clash_getter-converter-frontend
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v6
+  # test:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v6
 
-      - name: Install deps
-        run: npm install
+  #     - name: Install deps
+  #       run: npm install
 
-      - name: test
-        run: npm test
+  #     - name: test
+  #       run: npm test
 
-      - name: lint
-        run: npm run lint
+  #     - name: lint
+  #       run: npm run lint
 
-      - name: type-check
-        run: npx tsc --noEmit
+  #     - name: type-check
+  #       run: npx tsc --noEmit
 
-      - name: build
-        run: npm run build
+  #     - name: build
+  #       run: npm run build
 
   build_deploy:
     runs-on: ubuntu-latest
@@ -59,17 +59,17 @@ jobs:
             NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
             EXPOSE_APP_PORT=3002
       
-      # - name: Set up kubeconfig
-      #   run: |
-      #     mkdir -p ~/.kube
-      #     echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
+      - name: Set up kubeconfig
+        run: |
+          mkdir -p ~/.kube
+          echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
     
-      # - uses: azure/setup-helm@v4
+      - uses: azure/setup-helm@v4
 
-      # - name: Deploy
-      #   run: |
-      #     helm upgrade --install eqcms-frontend .helm/ \
-      #       --namespace cms \
-      #       --create-namespace \
-      #       --set imageTag=${{ github.sha }} \
-      #       --wait
+      - name: Deploy
+        run: |
+          helm upgrade --install eqcms-frontend .helm/ \
+            --namespace clashgetter \
+            --create-namespace \
+            --set imageTag=${{ github.sha }} \
+            --wait

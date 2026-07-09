@@ -1,0 +1,23 @@
+# Deployment settings
+name: clash_getter-converter-frontend
+componentsLabel: frontend
+replicaCount: 1
+namespace: clashgetter
+
+# App settings
+containerPort: 3002
+resources:
+  requests:
+    cpu: 100m
+    memory: 128Mi
+  limits:
+    cpu: 500m
+    memory: 512Mi
+
+# Ingress settings
+url: clashconverter.devil-on-the-wheel.ru
+
+# Image settings
+image: ghcr.io/igor-526/clash_getter-converter-frontend
+imagePullSecertName: ghcr-secret
+imageTag: latest
