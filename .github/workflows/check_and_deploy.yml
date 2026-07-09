@@ -1,0 +1,75 @@
+name: CheckAndDeploy
+
+on:
+  push:
+    branches:
+      - release
+
+env:
+  IMAGE: ghcr.io/igor-526/clash_getter-converter-frontend
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Install deps
+        run: npm install
+
+      - name: test
+        run: npm test
+
+      - name: lint
+        run: npm run lint
+
+      - name: type-check
+        run: npx tsc --noEmit
+
+      - name: build
+        run: npm run build
+
+  build_deploy:
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+
+      - name: Log in to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: |
+            ${{ env.IMAGE }}:latest
+            ${{ env.IMAGE }}:${{ github.sha }}
+          build-args: |
+            NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
+            EXPOSE_APP_PORT=3002
+      
+      # - name: Set up kubeconfig
+      #   run: |
+      #     mkdir -p ~/.kube
+      #     echo "${{ secrets.KUBE_CONFIG }}" | base64 -d > ~/.kube/config
+    
+      # - uses: azure/setup-helm@v4
+
+      # - name: Deploy
+      #   run: |
+      #     helm upgrade --install eqcms-frontend .helm/ \
+      #       --namespace cms \
+      #       --create-namespace \
+      #       --set imageTag=${{ github.sha }} \
+      #       --wait
