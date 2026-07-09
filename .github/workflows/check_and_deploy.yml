@@ -68,7 +68,7 @@ jobs:
 
       - name: Deploy
         run: |
-          helm upgrade --install eqcms-frontend .helm/ \
+          helm upgrade --install clash-getter-converter-frontend .helm/ \
             --namespace clashgetter \
             --create-namespace \
             --set imageTag=${{ github.sha }} \

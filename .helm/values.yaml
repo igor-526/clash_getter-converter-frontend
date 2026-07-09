@@ -1,5 +1,5 @@
 # Deployment settings
-name: clash_getter-converter-frontend
+name: clash-getter-converter-frontend
 componentsLabel: frontend
 replicaCount: 1
 namespace: clashgetter
