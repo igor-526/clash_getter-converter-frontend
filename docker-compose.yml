@@ -1,0 +1,15 @@
+services:
+  frontend:
+    build:
+      context: .
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_BASE_URL: ${NEXT_PUBLIC_API_BASE_URL}
+        PORT: ${EXPOSE_APP_PORT}
+    container_name: clash_getter-frontend
+    ports:
+      - "${EXPOSE_APP_PORT}:${EXPOSE_APP_PORT}"
+    restart: always
+    env_file:
+      - path: ./.env
+        required: true
