@@ -57,7 +57,7 @@ jobs:
             ${{ env.IMAGE }}:${{ github.sha }}
           build-args: |
             NEXT_PUBLIC_API_BASE_URL=${{ secrets.NEXT_PUBLIC_API_BASE_URL }}
-            EXPOSE_APP_PORT=3002
+            PORT=3002
       
       - name: Set up kubeconfig
         run: |
